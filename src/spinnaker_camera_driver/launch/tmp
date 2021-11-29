@@ -1,0 +1,22 @@
+  <node pkg="nodelet" type="nodelet" args="standalone image_proc/crop_decimate" name="crop_robot_img">
+    <param name="x_offset" type="int" value="180" />
+    <param name="y_offset" type="int" value="0" />
+    <param name="width" type="int" value="1080" />
+    <param name="height" type="int" value="1080" />
+    <!-- remap input topics -->
+    <remap from="camera/image_raw" to="$(arg camera_name)/image_rect_color"/>
+    <remap from="camera/image_info" to="$(arg camera_name)/camera_info"/>
+    <!-- remap output topics -->
+    <remap from="camera_out/image_raw" to="robot_camera_cropped/image_rect_color"/>
+    <remap from="camera_out/image_info" to="robot_camera_cropped/camera_info"/>
+  </node>
+
+  <!-- Video resizing -->
+  <node pkg="nodelet" type="nodelet" args="standalone image_proc/resize _scale_width:=0.385185 _scale_height:=0.385185" name="resize_robot_img">
+    <!-- remap input topics -->
+    <remap from="image" to="robot_camera_cropped/image_rect_color"/>
+    <remap from="camera_info" to="robot_camera_cropped/camera_info"/>
+    <!-- remap output topics -->
+    <remap from="resize_image/image" to="robot_camera_cropped_resize/image_rect_color"/>
+    <remap from="resize_image/camera_info" to="robot_camera_cropped_resize/camera_info"/>
+  </node>
